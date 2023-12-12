@@ -31,8 +31,10 @@ class AlienInvasion:
 			self._check_events()
 			self.ship.update()
 			self._update_bullets()
+			self._update_aliens()
 			self._update_screen()
 			self.clock.tick(154)
+
 
 	def _check_events(self):
 		for event in pygame.event.get():
@@ -76,14 +78,22 @@ class AlienInvasion:
 
 		current_x, current_y = alien_width, alien_height
 		while current_y < (self.settings.screen_height - 3 * alien_height):
-			self._create_alien(current_x, current_y)
+			while current_x < (self.settings.screen_width - 2 * alien_width):
+				self._create_alien(current_x, current_y)
+				current_x += 2 * alien_width
 
 			current_x = alien_width
 			current_y += 2 * alien_height
+
 	def _fire_bullet(self):
 		if len(self.bullets) < self.settings.bullets_allowed:
 			new_bullet = Bullet(self)
 			self.bullets.add(new_bullet)
+
+
+	def _update_aliens(self):
+		"""Move aliens"""
+		self.aliens.update()
 
 	def _update_bullets(self):
 		self.bullets.update()
