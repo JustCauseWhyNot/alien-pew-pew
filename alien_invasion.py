@@ -1,8 +1,10 @@
 import sys
+from time import sleep
 
 import pygame
 
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from ops import Alien
@@ -18,6 +20,8 @@ class AlienInvasion:
 	
 		self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height), pygame.RESIZABLE)
 		pygame.display.set_caption("Alien Invasion")
+		
+		self.stats = GameStats(self)
 	
 		self.ship = Ship(self)
 		self.bullets = pygame.sprite.Group()
@@ -36,6 +40,13 @@ class AlienInvasion:
 			self._update_screen()
 			self.clock.tick(154)
 
+
+	def _check_bullet_alien_collisions(self):
+		"""bullet-ops collison"""
+		collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+		if not self.aliens:
+			self.bullets.empty()
+			self._create_fleet()
 
 	def _check_events(self):
 		for event in pygame.event.get():
@@ -105,21 +116,28 @@ class AlienInvasion:
 			new_bullet = Bullet(self)
 			self.bullets.add(new_bullet)
 
+	def _ship_hit(self):
+		"""React to hits"""
+		self.stats.ships_left -= 1
+		self.bullets.empty()
+		self.aliens.empty()
+		self._create_fleet()
+		self.ship.center_ship()
+		sleep(.5)
 
 	def _update_aliens(self):
 		"""Move aliens"""
 		self.aliens.update()
+		if pygame.sprite.spritecollideany(self.ship, self.aliens):
+			self._ship_hit()
 
 	def _update_bullets(self):
 		self.bullets.update()
 		for bullet in self.bullets.copy():
 			if bullet.rect.bottom <= 0:
 				self.bullets.remove(bullet)
+		self._check_bullet_alien_collisions()
 
-		collisons = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
-		if not self.aliens:
-			self.bullets.empty()
-			self._create_fleet()
 
 	def _update_screen(self):
 		# Redraw the screen during each pass through the loop.
