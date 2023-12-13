@@ -5,6 +5,7 @@ class GameStats:
 		"""initalize stats"""
 		self.settings = ai_game.settings
 		self.reset_stats()
+		self.high_score = 0
 		
 	def reset_stats(self):
 		"""initalize dynamic stats"""
