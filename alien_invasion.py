@@ -127,13 +127,13 @@ class AlienInvasion:
 
 	def _ship_hit(self):
 		"""React to hits"""
-		if self.stats.ship_left > 0:
+		if self.stats.ships_left > 0:
 			self.stats.ships_left -= 1
 			self.bullets.empty()
 			self.aliens.empty()
 			self._create_fleet()
 			self.ship.center_ship()
-			sleep(.5)
+			sleep(0.5)
 		else:
 			self.game_active = False
 		
@@ -161,8 +161,10 @@ class AlienInvasion:
 			bullet.draw_bullet()
 		self.ship.blitme()
 		self.aliens.draw(self.screen)
+
 		if not self.game_active:
 			self.play_button.draw_button()
+
 		pygame.display.flip()
 
 if __name__ == '__main__':
