@@ -5,6 +5,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from button import Button
 from ship import Ship
 from bullet import Bullet
 from ops import Alien
@@ -34,7 +35,7 @@ class AlienInvasion:
 		"""Start the main loop for the game"""
 		while True:
 			self._check_events()
-			if self.game_active
+			if self.game_active:
 				self._check_fleet_edges()
 				self.ship.update()
 				self._update_bullets()
@@ -126,7 +127,7 @@ class AlienInvasion:
 
 	def _ship_hit(self):
 		"""React to hits"""
-		if self.stats.ship_left > 0
+		if self.stats.ship_left > 0:
 			self.stats.ships_left -= 1
 			self.bullets.empty()
 			self.aliens.empty()
@@ -135,6 +136,8 @@ class AlienInvasion:
 			sleep(.5)
 		else:
 			self.game_active = False
+		
+		self.play_button = Button(self, "Play")
 
 	def _update_aliens(self):
 		"""Move aliens"""
@@ -158,6 +161,8 @@ class AlienInvasion:
 			bullet.draw_bullet()
 		self.ship.blitme()
 		self.aliens.draw(self.screen)
+		if not self.game_active:
+			self.play_button.draw_button()
 		pygame.display.flip()
 
 if __name__ == '__main__':
