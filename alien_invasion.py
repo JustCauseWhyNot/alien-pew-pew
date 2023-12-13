@@ -15,6 +15,7 @@ class AlienInvasion:
 	def __init__(self):
 		"""Initialize the game, and create game resources"""
 		pygame.init()
+		self.game_active = True
 		self.clock = pygame.time.Clock()
 		self.settings = Settings()
 	
@@ -33,13 +34,20 @@ class AlienInvasion:
 		"""Start the main loop for the game"""
 		while True:
 			self._check_events()
-			self._check_fleet_edges()
-			self.ship.update()
-			self._update_bullets()
-			self._update_aliens()
+			if self.game_active
+				self._check_fleet_edges()
+				self.ship.update()
+				self._update_bullets()
+				self._update_aliens()
 			self._update_screen()
 			self.clock.tick(154)
 
+	def _check_aliens_bottom(self):
+		"""bottom ops"""
+		for alien in self.aliens.sprites():
+			if alien.rect.bottom >= self.settings.screen_height:
+				self._ship_hit()
+				break
 
 	def _check_bullet_alien_collisions(self):
 		"""bullet-ops collison"""
@@ -118,18 +126,22 @@ class AlienInvasion:
 
 	def _ship_hit(self):
 		"""React to hits"""
-		self.stats.ships_left -= 1
-		self.bullets.empty()
-		self.aliens.empty()
-		self._create_fleet()
-		self.ship.center_ship()
-		sleep(.5)
+		if self.stats.ship_left > 0
+			self.stats.ships_left -= 1
+			self.bullets.empty()
+			self.aliens.empty()
+			self._create_fleet()
+			self.ship.center_ship()
+			sleep(.5)
+		else:
+			self.game_active = False
 
 	def _update_aliens(self):
 		"""Move aliens"""
 		self.aliens.update()
 		if pygame.sprite.spritecollideany(self.ship, self.aliens):
 			self._ship_hit()
+		self._check_aliens_bottom
 
 	def _update_bullets(self):
 		self.bullets.update()
