@@ -29,6 +29,7 @@ class AlienInvasion:
 		"""Start the main loop for the game"""
 		while True:
 			self._check_events()
+			self._check_fleet_edges()
 			self.ship.update()
 			self._update_bullets()
 			self._update_aliens()
@@ -44,6 +45,20 @@ class AlienInvasion:
 				self._check_keydown_events(event)
 			elif event.type == pygame.KEYUP:
 				self._check_keyup_events(event)
+
+	def _check_fleet_edges(self):
+		"""Move aliens on edge detection"""
+		for alien in self.aliens.sprites():
+			if alien.check_edges():
+				self._change_fleet_direction()
+				break
+	
+	def _change_fleet_direction(self):
+		"""Drop aliens"""
+		for alien in self.aliens.sprites():
+			alien.rect.y += self.settings.fleet_drop_speed
+		self.settings.fleet_direction *= -1
+		
 
 	def _check_keydown_events(self, event):
 			"""Keypress"""
@@ -100,6 +115,8 @@ class AlienInvasion:
 		for bullet in self.bullets.copy():
 			if bullet.rect.bottom <= 0:
 				self.bullets.remove(bullet)
+
+		collisons = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
 	def _update_screen(self):
 		# Redraw the screen during each pass through the loop.
