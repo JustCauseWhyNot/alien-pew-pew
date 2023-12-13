@@ -60,6 +60,7 @@ class AlienInvasion:
 				self.stats.score += self.settings.alien_points * len(aliens)
 			self.sb.prep_score()
 			self.sb.prep_level()
+			self.sb.prep_ships()
 			self.sb.check_high_score()
 		if not self.aliens:
 			self.bullets.empty()
@@ -153,6 +154,7 @@ class AlienInvasion:
 		"""React to hits"""
 		if self.stats.ships_left > 0:
 			self.stats.ships_left -= 1
+			self.sb.prep_ships()
 			self.bullets.empty()
 			self.aliens.empty()
 			self._create_fleet()

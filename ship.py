@@ -1,10 +1,12 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship:
-	""""Class for ship."""
+class Ship(Sprite):
+	""""Class for ship"""
 
 	def __init__(self, ai_game):
 		""""Initalize ship"""
+		super().__init__()
 		self.screen = ai_game.screen
 		self.screen_rect = ai_game.screen.get_rect()
 		self.settings = ai_game.settings
@@ -35,3 +37,8 @@ class Ship:
 		if self.moving_left and self.rect.left > 0:
 			self.x -= self.settings.ship_speed
 		self.rect.x = self.x
+
+	#class Ship(Sprite):
+	#	"""Class for ship"""
+	#	def __init__(self, ai_game):
+	#		super().__init__()
